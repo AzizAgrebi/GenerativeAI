@@ -42,10 +42,16 @@
     }
 
     img {
-      max-width: 100%;
+      max-width: 600px;
       height: auto;
       border-radius: 8px;
       margin-top: 20px;
+      max-height: 1200px; /* Set a maximum height if needed */
+    }
+
+    .image-row {
+      display: flex;
+      justify-content: space-between; 20px
     }
 
     footer {
@@ -70,13 +76,17 @@
     </div>
   </header>
 
-  <section>
-    <img src="blog-image.jpg" alt="Blog Illustration">
+  <section class="image-row">
+    <img src="src/Sunset-Over-The-Sea.webp" alt="Image 1">
+    <img src="src/Sunset-Over-The-Sea.webp" alt="Image 2">
+    <img src="src/Sunset-Over-The-Sea.webp" alt="Image 3">
   </section>
 
-  <footer>
+
+
+  <section>
     <a href="#articles">Explore Articles</a>
-  </footer>
+  </section>
 
 </body>
 </html>
