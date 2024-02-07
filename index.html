@@ -1,92 +1,488 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Generative AI - Data Science and Deep Learning Blog</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      background-color: #f4f4f4;
-    }
 
-    header {
-      background-color: #333;
-      color: #fff;
-      text-align: center;
-      padding: 20px;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generative AI</title>
 
-    h1 {
-      margin: 0;
-      font-size: 36px;
-    }
+    <style>
 
-    nav {
-      text-align: center;
-      margin-top: 20px;
-    }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background-color: white;
+            margin: 0;
+            padding: 0;
+        }
 
-    nav a {
-      text-decoration: none;
-      color: #333;
-      margin: 0 10px;
-      font-weight: bold;
-    }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 50px;
+            color: white;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background-color: #000;
+            width: 94.4%;
+        }
 
-    section {
-      text-align: center;
-      margin: 20px;
-    }
+        .logo {
+            font-size: 24px;
+        }
 
-    img {
-      max-width: 600px;
-      height: auto;
-      border-radius: 8px;
-      margin-top: 20px;
-      max-height: 1200px; /* Set a maximum height if needed */
-    }
+        .navigation {
+            display: flex;
+        }
 
-    .image-row {
-      display: flex;
-      justify-content: space-between; 20px
-    }
+        .navigation a {
+            margin-left: 20px;
+            text-decoration: none;
+            color: inherit;
+        }
 
-    footer {
-      background-color: #333;
-      color: #fff;
-      text-align: center;
-      padding: 10px;
-      position: fixed;
-      bottom: 0;
-      width: 100%;
-    }
-  </style>
+        .navigation a:first-child {
+            margin-left: 0;
+        }
+
+        canvas {
+            display: block;
+            margin: auto;
+            z-index: -1; 
+            background-color: #000; /
+        }
+
+        .container {
+            max-width: 830px;
+            margin: 20px auto;
+            margin-top: 200px;
+            margin-bottom: 350px;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: left;
+            margin-left: 100px;
+            color: #000;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 22px;
+            text-align: justify;
+            }
+
+        .highlight {
+            font-weight: bold;
+            color: #333;
+        }
+
+        #generative-ai {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        :root {
+            --background-color-1: #fff; 
+            --background-color-2: #aaa; 
+            --background-color-3: #000; 
+            --padding-top:0px;
+        }
+
+        #generative-ai h2 {
+            font-family: 'Helvetica', sans-serif;
+            font-size: 36px;
+            background: linear-gradient(to right, var(--background-color-1), var(--background-color-2));
+            background-size: 100% 2em, 200% 100%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            position: relative;
+            display: inline-block;
+            margin-bottom: 70px;
+        }
+
+        h2::after {
+            content: ''; 
+            position: absolute; 
+            bottom: -4px; 
+            left: 0; 
+            width: 100%; 
+            height: 2px; 
+            background: linear-gradient(to right, var(--background-color-1), var(--background-color-2)); 
+        }
+
+        .article-table {
+            display: table;
+            margin: auto;
+        }
+
+        .other_row {
+            display: table-row;
+        }
+
+        .article {
+            display: table-cell;
+            width: 18%; 
+            padding: 10px; 
+            vertical-align: top;
+            font-family: 'Helvetica', sans-serif; 
+            background-size: 100% 2em, 200% 100%; 
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-align: center;
+        }
+
+        .article::after {
+            content: ''; 
+            position: absolute; 
+            bottom: -4px; 
+            left: 0; 
+            width: 100%; 
+            height: 2px; 
+        }
+
+        .article img {
+            height: 200px; 
+            width: 200px; 
+            object-fit: cover; 
+            border-radius: 8px; 
+        }
+
+        .article h3 {
+            font-size: 16px; 
+            margin-top: 10px;
+            font-family: 'Helvetica', sans-serif; 
+            background: var(--background-color-1);
+            background-size: 100% 2em, 200% 100%; 
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            position: relative; 
+            display: inline-block; 
+        }
+
+        h3::after {
+            content: ''; 
+            position: absolute; 
+            bottom: -4px; 
+            left: 0; 
+            width: 100%; 
+            height: 2px; 
+            background: linear-gradient(to right, var(--background-color-1), var(--background-color-2)); 
+        }
+
+        .row {
+            opacity: 0; 
+            transform: translateY(50px); 
+            transition: opacity 0.5s ease, transform 0.5s ease; 
+            width: 100%;
+            background-color: var(--background-color-3);
+            padding-bottom: 30px;
+            padding-top: var(--padding-top);
+        }
+
+        .row.visible {
+            opacity: 1;
+            transform: translateY(0); 
+        }
+
+    </style>
+
 </head>
+
+
 <body>
 
-  <header>
-    <h1>Generative AI</h1>
-    <div>
-      <a href="#about">About</a>
-      <a href="#links">Links</a>
-      <!-- Add more links as needed -->
+    <header class="header">
+        <div class="logo">GenerativeAI</div>
+        <nav class="navigation">
+            <a href="#">Home</a>
+            <a href="#">About</a>
+            <a href="#">Links</a>
+        </nav>
+    </header>
+
+    <canvas id="galaxyCanvas"></canvas>
+    <script src="src/galaxy.js"></script>
+
+    <div class="container">
+        <div>
+            <p><span class="highlight">Welcome to the Generative AI Blog.</span> Explore the <span class="highlight">mathematical</span> and <span class="highlight">
+                practical</span> concepts of <span class="highlight">Deep learning</span> and <span class="highlight">Programming</span>. Some other contents related 
+                to Science, including <span class="highlight">Finance</span> and <span class="highlight">Biology</span>, will also be covered. Delve into cutting-edge 
+                research and applications, and discover the latest advancements that impact various industries and domains. While I write most of the articles, I also 
+                curate and compile some articles from various authors. Each piece is credited to its respective writer with their name and contact. Join us on this 
+                journey of <span class="highlight">discovery</span> and <span class="highlight">exploration</span>.</p>
+        </div>
     </div>
-  </header>
 
-  <section class="image-row">
-    <img src="src/Sunset-Over-The-Sea.webp" alt="Image 1">
-    <img src="src/Sunset-Over-The-Sea.webp" alt="Image 2">
-    <img src="src/Sunset-Over-The-Sea.webp" alt="Image 3">
-  </section>
+    <div class="row">
+        <section id="generative-ai">
+            <h2>Generative AI</h2>
+            <div class="other_row">
+                <div class="article"> 
+                    <a href=Diffusion_models.html target="_blank">
+                    <img src="img/DDPMs.avif" alt="Article 1 Image">
+                    <h3>Diffusion Models (DDPMs)</h3>
+                    </a>
+                </div>
 
+                <div class="article"> 
+                    <img src="img/in_writing.png" alt="Article 2 Image">
+                    <h3>DDPMs from scratch (Keras)</h3>
+                </div>
+            
+                <div class="article">
+                    <img src="img/in_writing.png" alt="Article 3 Image">
+                    <h3>DDPMs from scratch (PyTorch)</h3>
+                </div>
+            
+                <div class="article">
+                    <img src="img/not_available.jpg" alt="Article 4 Image">
+                    <h3></h3>
+                </div>
+            
+                <div class="article">
+                    <img src="img/not_available.jpg" alt="Article 5 Image">
+                    <h3></h3>
+                </div>
+            </div>
+            
+            <div class="other_row">
+                <div class="article">
+                    <img src="img/not_available.jpg" alt="Article 6 Image">
+                    <h3></h3>
+                </div>
 
+                <div class="article">
+                    <img src="img/not_available.jpg" alt="Article 7 Image">
+                    <h3></h3>
+                </div>
 
-  <section>
-    <a href="Diffusion_models.html">Diffusion models</a>
-  </section>
+                <div class="article">
+                    <img src="img/not_available.jpg" alt="Article 8 Image">
+                    <h3></h3>
+                </div>
+
+                <div class="article">
+                    <img src="img/not_available.jpg" alt="Article 9 Image">
+                    <h3></h3>
+                </div>
+            
+                <div class="article">
+                    <img src="img/not_available.jpg" alt="Article 10 Image">
+                    <h3></h3>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div id="block-1">
+        <style>
+            #block-1 {
+                --background-color-1: #333;
+                --background-color-2: #555;
+                --background-color-3: #fff; 
+                --padding-top: 50px;
+            }
+        </style>
+        <div class="row">
+            <section id="generative-ai">
+                <h2>Large Language Models</h2>
+                    <div class="other_row">
+                        <div class="article">
+                            <img src="img/in_writing.png" alt="Article 1 Image">
+                            <h3>Self-Attention Mechanism</h3>
+                        </div>
+
+                        <div class="article">
+                            <img src="img/not_available.jpg" alt="Article 2 Image">
+                            <h3></h3>
+                        </div>
+
+                        <div class="article">
+                            <img src="img/not_available.jpg" alt="Article 3 Image">
+                            <h3></h3>
+                        </div>
+
+                        <div class="article">
+                            <img src="img/not_available.jpg" alt="Article 4 Image">
+                            <h3></h3>
+                        </div>
+
+                        <div class="article">
+                            <img src="img/not_available.jpg" alt="Article 5 Image">
+                            <h3></h3>
+                        </div>
+                    </div>
+                    <div class="other_row">
+                        <div class="article">
+                            <img src="img/not_available.jpg" alt="Article 6 Image">
+                            <h3></h3>
+                        </div>
+
+                        <div class="article">
+                            <img src="img/not_available.jpg" alt="Article 7 Image">
+                            <h3></h3>
+                        </div>
+
+                        <div class="article">
+                            <img src="img/not_available.jpg" alt="Article 8 Image">
+                            <h3></h3>
+                        </div>
+
+                        <div class="article">
+                            <img src="img/not_available.jpg" alt="Article 9 Image">
+                            <h3></h3>
+                        </div>
+
+                        <div class="article">
+                            <img src="img/not_available.jpg" alt="Article 10 Image">
+                            <h3></h3>
+                        </div>
+                    </div>
+            </section>
+        </div>
+    </div>
+
+    <div id="block-2">
+        <style>
+            #block-2 {
+                --background-color-1: #fff;
+                --background-color-2: #aaa;
+                --background-color-3: #000;
+                --padding-top: 50px;
+            }
+        </style>
+        <div class="row">
+            <section id="generative-ai">
+                <h2>Financial Mathematics</h2>
+                    <div class="other_row">
+                        <div class="article">
+                            <a href=pricing_library.html target="_blank">
+                            <img src="img/pricing_library.jpg" alt="Article 1 Image">
+                            <h3>Princig Library (writing)</h3>
+                            </a>
+                        </div>
+
+                        <div class="article">
+                            <img src="img/not_available.jpg" alt="Article 2 Image">
+                            <h3></h3>
+                        </div>
+
+                        <div class="article">
+                            <img src="img/not_available.jpg" alt="Article 3 Image">
+                            <h3></h3>
+                        </div>
+
+                        <div class="article">
+                            <img src="img/not_available.jpg" alt="Article 4 Image">
+                            <h3></h3>
+                        </div>
+
+                        <div class="article">
+                            <img src="img/not_available.jpg" alt="Article 5 Image">
+                            <h3></h3>
+                        </div>
+                    </div>
+                    <div class="other_row">
+                        <div class="article">
+                            <img src="img/not_available.jpg" alt="Article 6 Image">
+                            <h3></h3>
+                        </div>
+
+                        <div class="article">
+                            <img src="img/not_available.jpg" alt="Article 7 Image">
+                            <h3></h3>
+                        </div>
+
+                        <div class="article">
+                            <img src="img/not_available.jpg" alt="Article 8 Image">
+                            <h3></h3>
+                        </div>
+
+                        <div class="article">
+                            <img src="img/not_available.jpg" alt="Article 9 Image">
+                            <h3></h3>
+                        </div>
+
+                    <div class="article">
+                        <img src="img/not_available.jpg" alt="Article 10 Image">
+                        <h3></h3>
+                    </div>
+                    </div>
+            </section>
+        </div>
+    </div>
+    
+    <div id="block-1">
+        <div class="row">
+            <section id="generative-ai">
+                <h2>Biology</h2>
+                    <div class="other_row">
+                        <div class="article">
+                            <img src="img/in_writing.png" alt="Article 1 Image">
+                            <h3>AlphaFold : Proteins' 3D Structure</h3>
+                        </div>
+
+                        <div class="article">
+                            <img src="img/not_available.jpg" alt="Article 2 Image">
+                            <h3></h3>
+                        </div>
+
+                        <div class="article">
+                            <img src="img/not_available.jpg" alt="Article 3 Image">
+                            <h3></h3>
+                        </div>
+
+                        <div class="article">
+                            <img src="img/not_available.jpg" alt="Article 4 Image">
+                            <h3></h3>
+                        </div>
+
+                        <div class="article">
+                            <img src="img/not_available.jpg" alt="Article 5 Image">
+                            <h3></h3>
+                        </div>
+                    </div>
+                    <div class="other_row">
+                        <div class="article">
+                            <img src="img/not_available.jpg" alt="Article 6 Image">
+                            <h3></h3>
+                        </div>
+
+                        <div class="article">
+                            <img src="img/not_available.jpg" alt="Article 7 Image">
+                            <h3></h3>
+                        </div>
+
+                        <div class="article">
+                            <img src="img/not_available.jpg" alt="Article 8 Image">
+                            <h3></h3>
+                        </div>
+
+                        <div class="article">
+                            <img src="img/not_available.jpg" alt="Article 9 Image">
+                            <h3></h3>
+                        </div>
+
+                        <div class="article">
+                            <img src="img/not_available.jpg" alt="Article 10 Image">
+                            <h3></h3>
+                        </div>
+                    </div>
+            </section>
+        </div>
+    </div>
+
+    <script>
+        window.addEventListener('scroll', function() {
+        const blocks = document.querySelectorAll('.row');
+        blocks.forEach((block, index) => {
+            const blockTop = block.getBoundingClientRect().top;
+            const windowHeight = window.innerHeight;
+            if (blockTop < windowHeight * 0.95) { 
+                block.classList.add('visible');
+                }
+            });
+        });
+    </script>
 
 </body>
+
 </html>
