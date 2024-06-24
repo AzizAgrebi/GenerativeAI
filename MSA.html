@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amino acid sequences and MSAs</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script type="text/javascript" src="http://latex.codecogs.com/latexit.js"></script>
+    <script type="text/javascript">
+    LatexIT.add('div',true);
+    </script>
+    <style>
+        body {
+            font-family: 'Calibri';
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 50px;
+            color: white;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background-color: #000;
+            width: 94.4%;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        h1, h2, h3, p {
+            margin: 20px 0;
+        }
+        h1 {
+            font-size: 2em;
+            color: #000;
+        }
+        h2 {
+            font-size: 1.5em;
+            color: #000;
+        }
+        h3 {
+            font-size: 1.2em;
+            color: #000;
+        }
+        p {
+            font-size: 1em;
+            color: #000;
+            line-height: 1.6;
+        }
+        code {
+            background-color: #f4f4f9;
+            padding: 2px 4px;
+            border-radius: 4px;
+        }
+
+        .logo {
+            font-size: 24px;
+        }
+
+        .navigation {
+            display: flex;
+        }
+
+        .navigation a {
+            margin-left: 20px;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .navigation a:first-child {
+            margin-left: 0;
+        }
+
+        .content-area {
+            margin: 20px auto;
+            max-width: 1000px;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .margin {
+            width: calc((100% - 800px) / 2);
+            background-color: #dcdcdc; /* Elegant gray color for margin */
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+        }
+
+        .margin.right {
+            left: auto;
+            right: 0;
+        }
+
+        .math {
+            display: inline-block;
+            font-size: 16px;
+            line-height: 1.5;
+        }
+
+    </style>
+
+</head>
+
+<body>
+    <header>
+        <div class="logo">GenerativeAI</div>
+        <nav class="navigation">
+            <a href="#">Home</a>
+            <a href="#">About</a>
+            <a href="#">Links</a>
+        </nav>
+    </header>
+
+    <div class="content-area">
+        <div class="header">
+            <h1>Amino acid sequences and MSAs</h1>
+            <p>Aziz AGREBI</p>
+        </div>
+        <h2 id="introduction">1. Introduction</h2>
+
+        <p>
+            <b>Amino acids</b> are the building blocks of <b>proteins</b>, essential molecules for life. Amino acid sequences determine the 
+            <b>structure</b> and <b>function</b> of proteins. Comparing these sequences across different species or within the same species 
+            enables us to understand the evolutionary and functional relationships between proteins. <b>Multiple sequence alignment 
+                (MSA)</b> is a crucial method in this comparative analysis.
+        </p>
+
+        <h2 id="Amino acid sequences">2. Amino acid sequences</h2>
+
+        <p>
+            An amino acid sequence is a <b>linear chain of amino acid residues</b> that makes up a protein. This sequence 
+            is usually represented by a series of letters, each of which corresponds to a particular amino acid (for example, A for 
+            Alanine, R for Arginine). For example, the sequence <b>"MKTAYIAKQRQISFVKSHFSRQLEERLGLIEVQ..."</b> represents the order of amino 
+            acids in a given protein.
+        </p>
+
+        <p>
+            <b>These sequences are essential for protein function</b>, as the protein's three-dimensional structure, which determines its 
+            function, is directly influenced by the amino acid sequence.
+        </p>
+
+        <figure style="text-align: center;">
+            <img src="img/2D.png" alt="Amino acid sequence" style="width: 40%; height: auto;">
+            <figcaption>Figure 1: Example of 2D representation of an amino acid sequence.</figcaption>
+        </figure>
+
+        <h2 id="Multiple Sequence Alignment (MSA)">3. Multiple Sequence Alignment (MSA)</h2>
+        <h3 id="Definition">3.1 Definition</h3>
+
+        <p>
+            <b>MSAs are alignments of several homologous amino acid sequences</b> from different proteins or species. These alignments make 
+            it possible to compare sequences and identify <b>conserved regions</b>, i.e. portions of the sequence that have changed little 
+            over the course of evolution.
+        </p>
+
+        <p>
+            To build an MSA, we align several amino acid sequences by introducing gaps (dashes) <b>to maximize the similarities between 
+                the aligned sequences.</b> Here's a simplified example of an MSA:
+        </p>
+
+        <figure style="text-align: center;">
+            <img src="img/MSA2.png" alt="MSA" style="width: 50%; height: auto;">
+            <figcaption>Figure 2: Example of a Multiple Sequence Alignment.</figcaption>
+        </figure>
+
+        <h3 id="Why are MSAs important?">3.2 Why are they important?</h3>
+        <p>
+            MSAs are important for several reasons:
+            <ul>
+                <li>
+                    <p>
+                        <b>Identifying conserved regions:</b> Regions that remain unchanged in many sequences may indicate parts of the 
+                        protein that are essential for its structure or function.
+                    </p>
+                </li>
+                <li>
+                    <p>
+                        <b>Co-evolution:</b> MSAs can be used to identify pairs of residues that evolve together, i.e. residues that undergo 
+                        mutations in a coordinated fashion to maintain functional and structural interaction.
+                    </p>
+                </li>
+            </ul>
+        </p>
+
+        <h3 id="How to build MSAs?" ?">3.3 How to build MSAs?</h3>
+        <p>
+            Several algorithms and tools are available for creating MSAs. Here are some of the most common:
+            <ul>
+                <li>
+                    <p>
+                        <b>Clustal Omega:</b> Uses a hierarchical clustering approach to align sequences. It is renowned for its speed and 
+                        efficiency, even for large numbers of sequences <a href="#cite-Clustal">(Thompson, Higgins, & Gibson, 1994).</a>
+                    </p>
+                </li>
+                <li>
+                    <p>
+                        <b>MUSCLE (Multiple Sequence Comparison by Log-Expectation):</b> Known for its accuracy and speed, it uses a 
+                        step-by-step approach to build the alignment <a href="#cite-Muscle">(Edgar, 2004).</a>
+                    </p>
+                </li>  
+                <li>
+                    <p>
+                        <b>T-Coffee:</b> Offers high accuracy by combining several alignment methods to generate a consensus <a href="#cite-Coffee">(Notredame, Higgins, & Heringa, 2000).</a>
+                    </p>
+                </li>   
+            </ul>
+        </p>
+
+        <h3 id="Applications" ?">3.4 Applications</h3>
+        <p>
+            MSAs have many applications in molecular biology and bioinformatics, such as <b>identifying conserved motifs important for 
+            protein function or structure, analyzing mutations to understand their impact on protein function, and identifying 
+            conserved regions in pathogen proteins for vaccine development.</b>
+        </p>
+
+        <p>
+            The application we'll be focusing on next is <b>structural prediction:</b> information extracted from MSAs, such as coevolutionary 
+            contacts, is used by models like AlphaFold to improve the accuracy of structural predictions. By integrating this data, 
+            the model can make inferences about possible interactions between residues and thus <b>better predict 3D structure.</b> More on 
+            this in the following article.
+        </p>
+
+        <h2 id="3D structure of proteins">4. 3D structure of proteins</h2>
+        <h3 id="Why is it useful?">4.1 Why is it useful?</h3>
+
+        <p>
+            <b>The three-dimensional structure of proteins is crucial to their function.</b> Proteins don't simply function as linear 
+            chains of amino acids; they fold into complex configurations that are essential for their biological activity. Knowledge 
+            of 3D structure helps us to understand how proteins interact with other molecules, how they catalyze chemical reactions, 
+            and how they contribute to cellular processes. 3D structures are determined by techniques such as X-ray crystallography, 
+            nuclear magnetic resonance (NMR) and cryo-electron microscopy.
+        </p>
+
+        <p>
+            Understanding the 3D structure of proteins has several crucial applications:
+            <ul>
+                <li>
+                    <p>
+                        <b>Drug design:</b> The 3D structure enables researchers to design drugs that bind 
+                        to active sites on proteins, inhibiting or modifying their function in precise ways.
+                    </p>
+                </li>
+                <li>
+                    <p>
+                        <b>Protein engineering:</b> By understanding the relationship between sequence and structure, scientists can modify 
+                        proteins to improve their properties or confer new functions.
+                    </p>
+                </li>  
+                <li>
+                    <p>
+                        <b>Study of diseases:</b> Many diseases are caused by misfolded proteins or mutations that alter their structure. 
+                        Knowledge of 3D structure enables us to understand these dysfunctions and develop targeted treatments.
+                    </p>
+                </li>   
+                <li>
+                    <p>
+                        <b>Biotechnology:</b> Proteins with specific 3D structures can be used in a variety of industrial processes, such as 
+                        the manufacture of biofuels, the development of biobased materials, and the degradation of pollutants.
+                    </p>
+                </li>   
+            </ul>
+        </p>
+
+        <figure style="text-align: center;">
+            <img src="img/3D.jpeg" alt="3D structure" style="width: 50%; height: auto;">
+            <figcaption>Figure 3: Example of a 3D protein structure.</figcaption>
+        </figure>
+
+        <h3 id="The rise of deep learning">4.2 The rise of deep learning</h3>
+        <p>
+            However, <b>experimental determination of 3D protein structure is often costly and time-consuming.</b> Recently, machine learning 
+            techniques, in particular <b>deep neural networks</b>, have revolutionized the field of protein structure prediction. Models
+             such as <b>DeepMind's AlphaFold</b> have shown impressive performance, capable of predicting the 3D structure of proteins with 
+             an accuracy approaching that of experimental methods.
+        </p>
+
+        <p>
+            These models represent a major advance in computational biology. It offers promising prospects for scientific research, 
+            medicine and biotechnology, transforming our ability to understand and manipulate the fundamental biomolecules of life.
+            <b>In the following article</b>, we'll take a closer look at the Alphafold2 model created by Google Deepmind and released 
+            in July 2021.
+        </p>
+
+        <h2 id="References">Références</h2>
+        <ul>
+            <li id="cite-Clustal">Thompson, J.D., Higgins, D.G., & Gibson, T.J. (1994). CLUSTAL W: improving the sensitivity of progressive multiple sequence alignment through sequence weighting, position-specific gap penalties and weight matrix choice. Nucleic acids research, 22(22), 4673-4680.</li>
+            <li id="cite-Muscle">Edgar, R.C. (2004). MUSCLE: multiple sequence alignment with high accuracy and high throughput. Nucleic acids research, 32(5), 1792-1797.</li>
+            <li id="cite-Coffee">Notredame, C., Higgins, D.G., & Heringa, J. (2000). T-Coffee: A novel method for fast and accurate multiple sequence alignment. Journal of Molecular Biology, 302(1), 205-217.</li>
+        </ul>
+    </div>
+
+</body>
+</html>
