@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LaTeX Article</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script type="text/javascript" src="http://latex.codecogs.com/latexit.js"></script>
+    <script type="text/javascript">
+    LatexIT.add('div',true);
+    </script>
+    <style>
+        body {
+            font-family: 'Calibri';
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 50px;
+            color: white;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background-color: #000;
+            width: 94.4%;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        h1, h2, h3, p {
+            margin: 20px 0;
+        }
+        h1 {
+            font-size: 2em;
+            color: #000;
+        }
+        h2 {
+            font-size: 1.5em;
+            color: #000;
+        }
+        h3 {
+            font-size: 1.2em;
+            color: #000;
+        }
+        p {
+            font-size: 1em;
+            color: #000;
+            line-height: 1.6;
+        }
+        code {
+            background-color: #f4f4f9;
+            padding: 2px 4px;
+            border-radius: 4px;
+        }
+
+        .logo {
+            font-size: 24px;
+        }
+
+        .navigation {
+            display: flex;
+        }
+
+        .navigation a {
+            margin-left: 20px;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .navigation a:first-child {
+            margin-left: 0;
+        }
+
+        .content-area {
+            margin: 20px auto;
+            max-width: 1000px;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .margin {
+            width: calc((100% - 800px) / 2);
+            background-color: #dcdcdc; /* Elegant gray color for margin */
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+        }
+
+        .margin.right {
+            left: auto;
+            right: 0;
+        }
+
+        .math {
+            display: inline-block;
+            font-size: 16px;
+            line-height: 1.5;
+        }
+
+    </style>
+
+</head>
+
+<body>
+    <header>
+        <div class="logo">GenerativeAI</div>
+        <nav class="navigation">
+            <a href="#">Home</a>
+            <a href="#">About</a>
+            <a href="#">Links</a>
+        </nav>
+    </header>
+
+    <div class="content-area">
+        <div class="header">
+            <h1>Variational Autoencoders</h1>
+            <p>Aziz AGREBI</p>
+        </div>
+        <h2 id="introduction">1. Introduction</h2>
+        <p>
+            <b>Variational Autoencoders (VAEs)</b> are a powerful class of generative models used in machine learning. Unlike traditional autoencoders, VAEs do not simply map input data directly to a latent representation. Instead, they introduce a <b>probabilistic formalism</b> that can be used to generate new data similar to the training data.
+
+            VAEs model input data as <b>samples from a probabilistic distribution.</b> To do this, they use two main components: an encoder, which takes the input data and produces the parameters of a distribution in latent space, and a decoder, which samples points in this latent space to reconstruct the original data. In this respect, Variational Autoencoders belong to the class of Latent Variable Models.
+
+            These models are trained by <b>evidence lower bound maximisation (ELBO).</b> We will see that with this encoder-decoder structure and a priori on the distribution in latent space, it is possible to have an explicit form of ELBO to train our model.
+        </p>
+
+        <h2 id="Structure">2. Structure of a VAE</h2>
+
+        <p>
+            First of all, let's come back to the ELBO term and develop it a little bit:
+        </p>
+        <p>
+            <span class="math">
+                \begin{align*}
+                \underbrace{\mathbb{E}_{q_{\boldsymbol{\phi}}(\boldsymbol{z} \mid \boldsymbol{x})}\left[\log \frac{p(\boldsymbol{x}, \boldsymbol{z})}{q_{\boldsymbol{\phi}}(\boldsymbol{z} \mid \boldsymbol{x})}\right]}_{\text{ELBO}}
+                &= \mathbb{E}_{q_{\boldsymbol{\phi}}(\boldsymbol{z} \mid \boldsymbol{x})}\left[\log \frac{p(\boldsymbol{x} | \boldsymbol{z}) p(\boldsymbol{z})}{q_{\boldsymbol{\phi}}(\boldsymbol{z} \mid \boldsymbol{x})}\right] \\ 
+                &= \mathbb{E}_{q_{\boldsymbol{\phi}}(\boldsymbol{z} \mid \boldsymbol{x})}\left[\log p(\boldsymbol{x} | \boldsymbol{z})\right] + \mathbb{E}_{q_{\boldsymbol{\phi}}(\boldsymbol{z} \mid \boldsymbol{x})}\left[\log \frac{p(\boldsymbol{z})}{q_{\boldsymbol{\phi}}(\boldsymbol{z} \mid \boldsymbol{x})}\right] \\ 
+                &= \underbrace{\mathbb{E}_{q_{\boldsymbol{\phi}}(\boldsymbol{z} \mid \boldsymbol{x})}\left[\log p(\boldsymbol{x} | \boldsymbol{z})\right]}_{\text{reconstruction term}} - \underbrace{D_{\mathrm{KL}}\left(q_{\boldsymbol{\phi}}(\boldsymbol{z} \mid \boldsymbol{x}) \| p(\boldsymbol{z})\right)}_{\text{prior matching term}}
+                \end{align*}
+            </span>
+        </p>
+
+        <p>
+            Yet, we might not have access to \(p(\boldsymbol{x} | \boldsymbol{z})\). Therefore we introduce a second parameterized model: \(p_{\boldsymbol{\theta}}(\boldsymbol{x} | \boldsymbol{z})\). This second model will be trained so that 
+            \(\mathbb{E}_{q_{\boldsymbol{\phi}}(\boldsymbol{z} \mid \boldsymbol{x})}\left[\log p_{\boldsymbol{\theta}}(\boldsymbol{x} | \boldsymbol{z})\right] \approx 
+            \mathbb{E}_{q_{\boldsymbol{\phi}}(\boldsymbol{z} \mid \boldsymbol{x})}\left[\log p(\boldsymbol{x} | \boldsymbol{z})\right]\). 
+        </p>
+            
+        <p>
+            <b>How to do that?</b> The initial goal was to maximize the ELBO. Therefore, we will adjust \(\phi\) and \(\theta\) jointly in order to minimize \(D_{\mathrm{KL}}\left(q_{\boldsymbol{\phi}}(\boldsymbol{z} \mid \boldsymbol{x}) \| p(\boldsymbol{z})\right)\)
+            and to maximize \(\mathbb{E}_{q_{\boldsymbol{\phi}}(\boldsymbol{z} \mid \boldsymbol{x})}\left[\log p_{\boldsymbol{\theta}}(\boldsymbol{x} | \boldsymbol{z})\right]\).
+        </p>
+
+        <p>
+            In this context, we learn an intermediate bottleneck distribution \( q_{\boldsymbol{\phi}}(\boldsymbol{z} | \boldsymbol{x}) \) that acts as an <b>encoder</b>, transforming inputs into a distribution over possible latent variables. Simultaneously, we learn a deterministic function \( p_{\boldsymbol{\theta}}(\boldsymbol{x} | \boldsymbol{z}) \) to 
+            convert a given latent vector \( \boldsymbol{z} \) into an observation \( \boldsymbol{x} \), which serves as a <b>decoder</b> <a href="#cite-luo2022understanding">(Luo et al., 2022)</a>.
+        </p>
+
+        <p>
+            <b>More precisely</b>, the reconstruct term measures the reconstruction likelihood of the decoder from our variational distribution; this ensures that the learned distribution is
+            modeling effective latents that the original data can be regenerated from. The prior matching term measures how similar the learned variational distribution is to a prior belief held 
+            over latent variables. Minimizing this term encourages the encoder to actually learn a distribution rather than collapse into a Dirac delta function <a href="#cite-karagiannakos2021latent">(Karagiannakos et al., 2021)</a>.
+        </p>
+        
+        <figure style="text-align: center;">
+            <img src="img/VAEs.png" alt="Variational autoencoder" style="width: 60%; height: auto;">
+            <figcaption>Figure 1: Variational Autoencoders.
+            </figcaption>
+        </figure>
+
+        <h2 id="Training">3. Training of a VAE</h2>
+        <h3 id="Parameterized Statistics">3.1 Parameterized Statistics</h3>
+
+        <p>
+            The encoder of a VAE is usually chosen to model a <b>parameterized multivariate Gaussian with diagonal covariance</b>, and the prior is often fixed as a <b>standard multivariate Gaussian</b>:
+        </p>
+
+        <p>
+        <ul>
+            <li>
+                \(q_{\boldsymbol{\phi}}(\boldsymbol{z} | \boldsymbol{x}) =\mathcal{N}\left(\boldsymbol{z} ; \boldsymbol{\mu}_{\boldsymbol{\phi}}(\boldsymbol{x}), \boldsymbol{\sigma}_{\boldsymbol{\phi}}^2(\boldsymbol{x}) \mathbf{I}\right)\)
+            </li>
+            <li>
+                \(p(\boldsymbol{z}) =\mathcal{N}(\boldsymbol{z} ; \mathbf{0}, \mathbf{I})\)
+            </li>
+        </ul>
+        </p>
+
+        <h3 id="ELBO Computation">3.2 ELBO Computation</h3>
+
+        <p>
+            With the asumption over \(q_{\boldsymbol{\phi}}(\boldsymbol{z} | \boldsymbol{x})\), <b>we can compute the reconstruction term</b> using a <b>Monte Carlo estimate</b>:
+        </p>
+
+        <p>
+            \(\underset{\boldsymbol{\phi}, \boldsymbol{\theta}}{\arg \max } \mathbb{E}_{q_{\boldsymbol{\phi}}(\boldsymbol{z} | \boldsymbol{x})}\left[\log p_{\boldsymbol{\theta}}(\boldsymbol{x} | \boldsymbol{z})\right] \approx \underset{\boldsymbol{\phi}, \boldsymbol{\theta}}{\arg \max } \sum_{l=1}^L \log p_{\boldsymbol{\theta}}\left(\boldsymbol{x} | \boldsymbol{z}^{(l)}\right)\)
+        </p>
+
+        <p>
+            where latents \( \boldsymbol{z}^{(l)} \) for \( l = 1, \ldots, L \) are sampled from \(q_{\boldsymbol{\phi}}(\boldsymbol{z} | \boldsymbol{x})\) for every observation \( \boldsymbol{x} \) in the dataset.
+        </p>
+
+        <p>
+            Moreover, with both assumptions over \(q_{\boldsymbol{\phi}}(\boldsymbol{z} | \boldsymbol{x})\) and \(p(\boldsymbol{z})\), <b>the KL divergence term of the ELBO can be computed</b> analytically.
+        </p>
+
+        <p>
+            We are therefore able to compute our whole objective function <b>(to maximize)</b>:
+        </p>
+
+        <p>
+        \(\underset{\boldsymbol{\phi}, \boldsymbol{\theta}}{\arg \max } (\sum_{l=1}^L \log p_{\boldsymbol{\theta}}\left(\boldsymbol{x} | \boldsymbol{z}^{(l)}\right) - D_{\mathrm{KL}}\left(q_{\boldsymbol{\phi}}(\boldsymbol{z} \mid \boldsymbol{x}) \| p(\boldsymbol{z})\right))\) 
+        </p>
+
+        <h3 id="Training">3.3 Training of a VAE</h3>
+
+        <p>
+            One classical way to train our model from here is to take the opposite or our previous objective function and perform a <b>gradient descent.</b>
+            However, each \(\boldsymbol{z}^{(l)}\) that our loss is computed on is generated by a <b>stochastic sampling procedure, which is generally non-differentiable.</b> Therefore it is a problem because the parameters 
+            \(\boldsymbol{\mu}_{\boldsymbol{\phi}}(\boldsymbol{x})\) and \(\boldsymbol{\sigma}_{\boldsymbol{\phi}}^2(\boldsymbol{x})\) are part of this stochastic sampling procedure and depends on \(phi\), making the 
+            objective function <b>non-differentiable with respect to \(\phi\) in the general case.</b>
+        </p>
+        <p>
+            Fortunately, we chose \(\boldsymbol{z}\) to follow a Gaussian distribution. We can therefore rewrite:
+        </p>
+        <p>
+            \(\boldsymbol{z}=\boldsymbol{\mu}_{\boldsymbol{\phi}}(\boldsymbol{x})+\boldsymbol{\sigma}_{\boldsymbol{\phi}}(\boldsymbol{x}) \odot \boldsymbol{\epsilon} \quad with \ \boldsymbol{\epsilon} \sim \mathcal{N}(\boldsymbol{\epsilon} ; \mathbf{0}, \mathbf{I})\)
+        </p>
+        <p>
+            This is called the <b>reparameterization trick</b> <a href="#cite-blei2018variational">(Weng, 2018)</a>.
+            Under this reparameterized version of \(\boldsymbol{z}\), <b>gradients can then be computed with respect to \(\phi\) as desired</b>, to optimize \(\boldsymbol{\mu}_{\boldsymbol{\phi}}(\boldsymbol{x})\) and \(\boldsymbol{\sigma}_{\boldsymbol{\phi}}^2(\boldsymbol{x})\),
+            since \(\phi\) appears nowhere in the stochastic sampling procedure since we only have to compute the normal distribution \(\boldsymbol{\epsilon}\).
+        </p>
+
+        <h3 id="What's next?">3.4 What's next?</h3>
+
+        <p>
+            Now that we know how to train our encoder and our decoder, <b>how do we use our model to generate new sample?</b>
+        </p>
+
+        <p>
+            It's pretty simple. We just have to <b>sample new latent data using the \(\boldsymbol{z}\) distribution \(\mathcal{N}(\boldsymbol{z} ; \mathbf{0}, \mathbf{I})\).</b>
+            After that, we make the generated latent data <b>pass through the trained decoder \(p_{\boldsymbol{\theta}}(\boldsymbol{x} | \boldsymbol{z})\).</b> The result will be
+            a new \(\boldsymbol{x}\) entirely generated by our model and <b>that follows the same distribution of our training dataset.</b>
+        </p>
+
+        <figure style="text-align: center;">
+            <img src="img/vae3.png" alt="Variational autoencoder 2" style="width: 60%; height: auto;">
+            <figcaption>Figure 2: Sampling process of a VAE.
+            </figcaption>
+        </figure>
+
+        <h2 id="References">Références</h2>
+        <ul>
+            <li id="cite-luo2022understanding">Calvin Luo (2022). Understanding diffusion models: A unified perspective. arXiv preprint arXiv:2208.11970.</li>
+            <li id="cite-karagiannakos2021latent">Sergios Karagiannakos (2021). . The theory behind latent variable models: formulating a variational autoencoder. The AI Summer, February 4 2021. A</li>
+            <li id="cite-blei2018variational">Weng (2018), the transition from Autoencoders to Beta-VAE involves understanding the differences in their objectives and applications.</li>
+        </ul>
+    </div>
+
+</body>
+</html>
