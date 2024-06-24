@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evidence Lower Bound (ELBO)</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script type="text/javascript" src="http://latex.codecogs.com/latexit.js"></script>
+    <script type="text/javascript">
+    LatexIT.add('div',true);
+    </script>
+    <style>
+        body {
+            font-family: 'Calibri';
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 50px;
+            color: white;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background-color: #000;
+            width: 94.4%;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        h1, h2, h3, p {
+            margin: 20px 0;
+        }
+        h1 {
+            font-size: 2em;
+            color: #000;
+        }
+        h2 {
+            font-size: 1.5em;
+            color: #000;
+        }
+        h3 {
+            font-size: 1.2em;
+            color: #000;
+        }
+        p {
+            font-size: 1em;
+            color: #000;
+            line-height: 1.6;
+        }
+        code {
+            background-color: #f4f4f9;
+            padding: 2px 4px;
+            border-radius: 4px;
+        }
+
+        .logo {
+            font-size: 24px;
+        }
+
+        .navigation {
+            display: flex;
+        }
+
+        .navigation a {
+            margin-left: 20px;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .navigation a:first-child {
+            margin-left: 0;
+        }
+
+        .content-area {
+            margin: 20px auto;
+            max-width: 1000px;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .margin {
+            width: calc((100% - 800px) / 2);
+            background-color: #dcdcdc; /* Elegant gray color for margin */
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+        }
+
+        .margin.right {
+            left: auto;
+            right: 0;
+        }
+
+        .math {
+            display: inline-block;
+            font-size: 16px;
+            line-height: 1.5;
+        }
+
+    </style>
+
+</head>
+
+<body>
+    <header>
+        <div class="logo">GenerativeAI</div>
+        <nav class="navigation">
+            <a href="#">Home</a>
+            <a href="#">About</a>
+            <a href="#">Links</a>
+        </nav>
+    </header>
+
+    <div class="content-area">
+        <div class="header">
+            <h1>Evidence Lower Bound</h1>
+            <p>Aziz AGREBI</p>
+        </div>
+        <h2 id="introduction">1. Introduction</h2>
+        <p>
+            <b>Generative modeling</b> plays a pivotal role in machine learning by allowing us to model and generate data that closely 
+            resembles our observations. More precisely, when confronted with observed samples <span class="math inline">\(x\)</span> 
+            stemming from a distribution of interest <span class="math inline">\(q(x)\)</span> — considering these samples as images — 
+            the aim of a generative model is to effectively <b>capture and model the underlying data distribution 
+            <span class="math inline">\(q(x)\)</span>.</b> Once this modeling is achieved, the model gains the capability to generate new 
+            samples that follow this distribution at will.
+        </p>
+        <p>
+            One popular approach to do so is through <b>likelihood-based generative models</b>, which aim to maximize the likelihood of the 
+            observed data. However, directly computing this likelihood is often infeasible due to the complexity of integrating out 
+            latent variables or the need for an exact posterior distribution.
+        </p>
+        <p>
+            To overcome these hurdles, we turn to the concept of <b>the Evidence Lower Bound (ELBO)</b> <a href="#cite-luo2022understanding">(Luo et al., 2022)</a>.
+             The ELBO provides a tractable means 
+            of optimizing latent variable models by approximating the log-likelihood of the observed data. In essence, maximizing the 
+            ELBO allows us to indirectly maximize the likelihood, thereby learning an effective generative model. This article 
+            delves into the mathematical foundations of the ELBO, demonstrating its derivation and explaining why it serves as a 
+            powerful objective for training latent variable models.
+        </p>
+
+        <h2 id="Latent Variable Models">2. Latent Variable Models</h2>
+        <h3 id="Definition">2.1 Definition</h3>
+        <p>
+            A <b>latent variable model</b> is a framework that includes hidden (latent) variables to model the underlying structure of 
+            observed data. The key idea is that the observed data <span class="math inline">\(x\)</span> is generated by some process 
+            that involves latent variables <span class="math inline">\(x\)</span>. These latent variables capture the essential 
+            features or factors that are <b>not directly observable but significantly influence the generation of the observed data.</b>
+        </p>
+        <p>
+            In the context of image generative models like Variational Autoencoders (VAEs), latent variables 
+            <span class="math inline">\(z\)</span> are <b>smaller, more compact representations of the observed data 
+            <span class="math inline">\(x\)</span>.</b> This means that <span class="math inline">\(z\)</span> encapsulates the most 
+            critical information needed to generate or describe <span class="math inline">\(x\)</span> in a lower-dimensional space 
+            <a href="#cite-karagiannakos2021latent">(Karagiannakos et al., 2021)</a>.
+        </p>
+
+        <figure style="text-align: center;">
+            <img src="img/latent.png" alt="Latent variable" style="width: 50%; height: auto;">
+            <figcaption>Figure 1: A latent space on the left. Each point represents a low-dimensional image of a horse. We need
+                a 'decoder' to be able to reconstruct the horse images from the latent points.
+            </figcaption>
+        </figure>
+
+        <h3 id="Components">2.2 Components</h3>
+        <ul>
+            <li>
+                <p><b>Prior Distribution:</b> <span class="math">\(p(z)\)</span> - This defines the distribution over the latent variables \(z\).</p>
+            </li>
+            <li>
+                <p><b>Ground truth decoder:</b> <span class="math">\(p(x | z)\)</span> - This defines how the observed data is generated from the latent variables. It models the probability of observing \(x\) given the latent variables \(z\).</p>
+            </li>
+            <li>
+                <p><b>Joint Distribution:</b> <span class="math">\(p(x, z)\)</span> - The combined distribution of observed and latent variables is given 
+                    by:</p>
+                <p><span class="math">\(p(x, z) = p(x | z) p(z)\)</span></p>
+            </li>
+            <li>
+                <p><b>Likelihood of the observed data:</b> <span class="math">\(p(x)\)</span> - The distribution of the observed data alone is obtained by integrating 
+                    out the latent variables:</p>
+                <p><span class="math">\(p(x) = \int p(x, z) \, dz = \int p(x | z) p(z) \, dz\)</span></p>
+            </li>
+            <li>
+                <p><b>Ground truth encoder or Posterior Distribution:</b> <span class="math">\(p(z | x)\)</span>The distribution of the latent variables given the observed data is given by 
+                    Bayes' theorem:</p>
+                <p><span class="math">\(p(z | x) = \frac{p(x | z) p(z)}{p(x)}\)</span></p>
+            </li>
+        </ul>
+
+        <h3>2.3 Why is the Likelihood Hard to Compute?</h3>
+        <p><b>Computing the likelihood \(p(x)\) of the observed data is challenging</b> due to the fact that the marginalization process involves integrating over all possible values of the latent variables \(z\):</p>
+        <p><span class="math">\(p(x) = \int p(x | z) p(z) \, dz\)</span></p>
+        <p>And this integration is hard to compute because:</p>
+        <ul>
+            <li>
+                <p>The ground truth decoder \(p(x | z)\) <b>may be unknown or have a complex form</b>, making the integration analytically infeasible.</p>
+            </li>
+            <li>
+                <p>As the dimensionality of the latent space increases, <b>the volume of the space grows exponentially</b>, making numerical integration methods inefficient and impractical.</p>
+            </li>
+        </ul>
+        <p>To address the difficulty in computing the likelihood, <b>variational inference</b> is often used <a href="#cite-blei2018variational">(Blei, 2018)</a>. The key idea is to approximate the intractable posterior distribution \(p(z | x)\) with a more tractable distribution \(q(z | x)\) learned by a parameterized model. We will therefore note \(q_\phi(z | x)\) instead of \(q(z | x)\), \(\phi\) representing the parameters of the model (for example the weights of a deep learning model).</p>
+
+        <figure style="text-align: center;">
+            <img src="img/vi.png" alt="Variational inference" style="width: 50%; height: auto;">
+            <figcaption>Figure 2: Variational inference considering a certain family of distributions.
+            </figcaption>
+        </figure>
+
+        <h2>3. Variational Inference and the Evidence Lower Bound (ELBO)</h2>
+        <p>Starting from the log-likelihood, we multiply by 1 = \(\int q_\phi(z | x) \, dz\):
+        <span class="math">
+                \[
+                \begin{align*}
+                    \log p(x) &= \log p(x) \int q_\phi(z | x) \, dz \\
+                    &= \int \log p(x) \, q_\phi(z | x) \, dz \\
+                    &= \mathbb{E}_{q_\phi(z | x)} [\log p(x)] \\
+                    &= \mathbb{E}_{q_\phi(z | x)} \left[ \log \frac{p(x, z)}{p(z | x)} \right] \quad \text{(Bayes' formula)} \\
+                    &= \mathbb{E}_{q_\phi(z | x)} \left[ \log \frac{p(x, z)}{q_\phi(z | x)} + \log \frac{q_\phi(z | x)}{p(z | x)} \right] \quad \text{(we multiply and divide by  \(q_\phi(z | x)\) inside the log)} \\
+                    &= \underbrace{\mathbb{E}_{q_\phi(z | x)} \left[ \log \frac{p(x, z)}{q_\phi(z | x)} \right]}_{\text{ELBO}} + \underbrace{\text{KL}(q_\phi(z | x) \parallel p(z | x))}_{\text{KL Divergence}} \\
+                    &\geq \mathbb{E}_{q_\phi(z | x)} \left[ \log \frac{p(x, z)}{q_\phi(z | x)} \right] \quad \text{Since the KL divergence is non-negative}
+                \end{align*}
+            \]</p>
+        </span>
+        <p>This confirms that <b>the ELBO is a lower bound of the log-likelihood.</b> Moreover, we clearly observe that the log-likelihood is equal to the ELBO plus the KL Divergence between the approximate posterior \(q_\phi(z | x)\) and the true posterior \(p(z | x)\). Since the KL Divergence is a measure of the distance between two distributions and
+        \(q_\phi(z | x)\) has been introduced to approximate \(p(z | x)\), what we want here is to minimize the KL Divergence between these two distributions until reaching 0 in the ideal case. <b>However, it is intractable to minimize this KL Divergence term directly</b>, as we do not have access to the true posterior distribution \(p(z | x)\). 
+        Nevertheless, since the log-likelihood of our observed data \(\log p(x)\) is constant with respect to \(\phi\), adjusting the parameters \(\phi\) to maximize the ELBO will indirectly minimize the KL Divergence. Therefore, <b>optimizing the ELBO helps us approximate the true latent posterior distribution.</b> Additionally, once the ELBO is maximized (and therefore the KL Divergence minimized, ideally close to 0), it can be used to approximate the log-likelihood of our observed data.
+        <b>One important remark</b> is that even though \(p(x, z)\) appears in our ELBO, which seems to make the ELBO intractable like the log-likelihood or the KL Divergence term, we will see in the articles on the Variational Autoencoders and the Denoising Diffusion Probabilistic Models that we can find solutions to compute and maximize the ELBO.</p>    
+    
+        <h2>4. Conclusion</h2>
+        <p>In conclusion, <b>the Evidence Lower Bound (ELBO) is a fundamental concept that allows us to effectively train latent variable models by approximating the log-likelihood of observed data.</b> Despite the apparent complexity of the ELBO involving terms like \(p(x, z)\), <b>practical implementations in models such as Variational Autoencoders and Denoising Diffusion Probabilistic Models</b> reveal ways to compute and maximize the ELBO effectively. Therefore, optimizing the ELBO is not only feasible but also essential for training powerful generative models that can generate new, realistic samples resembling the observed data.</p>
+    
+        <h2 id="References">Références</h2>
+        <ul>
+            <li id="cite-luo2022understanding">Calvin Luo (2022). Understanding diffusion models: A unified perspective. arXiv preprint arXiv:2208.11970.</li>
+            <li id="cite-karagiannakos2021latent">Sergios Karagiannakos (2021). . The theory behind latent variable models: formulating a variational autoencoder. The AI Summer, February 4 2021. A</li>
+            <li id="cite-blei2018variational">Blei, D. M., Kucukelbir, A., & McAuliffe, J. D. (2018). Variational Inference: A Review for Statisticians. arXiv preprint arXiv:1601.00670.</li>
+        </ul>
+    </div>
+
+</body>
+</html>
